@@ -1,33 +1,19 @@
 # CloudWindows
 
-A low-cost cloud Windows desktop project.
+A lightweight Linux desktop you can open in your browser using GitHub Codespaces.
 
-## Target design
-- Azure-hosted Windows Server 2022 with Desktop Experience
-- Target VM: 2 vCPU / 4 GiB RAM, subject to availability and pricing
-- Browser access: Chrome Remote Desktop
-- No VirtualBox installed inside the cloud VM
-- GitHub Actions for manual start and Azure deallocation
-- Azure OIDC authentication; no long-lived credentials committed to this repository
+## What it provides
+- Ubuntu 24.04 container with XFCE desktop
+- Browser access through noVNC on a private forwarded port
+- 2-core Codespaces configuration to fit typical free-tier usage
+- No Azure VM, Azure account, or paid server deployment required
 
-## Cost and safety
-Azure compute is billed while a VM is running. A VM must be **deallocated** to stop compute billing; managed disks, snapshots, IP resources, and bandwidth may still incur charges. Do not assume this Windows configuration is free. Check current region-specific pricing and subscription eligibility before deployment. No Azure resources should be created until the owner explicitly approves the estimated costs.
+## Start
+Open **Code → Codespaces → Create codespace on main**. Wait for the desktop to start, then open the forwarded **Linux desktop (noVNC)** port 6080.
 
-## Planned steps
-1. Confirm subscription, region, quota, and pricing.
-2. Prepare secure VM and remote-access configuration.
-3. Configure GitHub Actions with Azure OIDC federated credentials.
-4. Add manual start and deallocate workflows.
-5. Add budget alerts and verify shutdown behavior.
+See [docs/SETUP.md](docs/SETUP.md) for usage, free allowance, billing safeguards, and limitations.
 
-## Security
-- Never commit passwords, tokens, or private keys.
-- Do not expose RDP (TCP 3389) to the entire internet.
-- Keep this repository private before adding any sensitive configuration; secrets still belong in GitHub/Azure secret stores, not files.
+## Important limitations
+This is a Linux desktop container, not a full virtual machine. Browser games and web apps are the best fit. Roblox through Sober is unofficial and is **not guaranteed** to work because Codespaces does not provide a dedicated GPU or promise the Android/virtualization features Sober may need.
 
-
-## Repository setup
-
-See [docs/SETUP.md](docs/SETUP.md) for the GitHub Actions and Azure OIDC configuration steps. The start and deallocate workflows are manual-only; they do not run automatically.
-
-**Before adding Azure configuration:** switch this repository to private. Never commit credentials or resource-specific secrets.
+GitHub's free Codespaces allowance is subject to current plan terms. Check your billing settings and disable paid overages before use.
