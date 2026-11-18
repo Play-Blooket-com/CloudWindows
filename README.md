@@ -24,3 +24,10 @@ Azure compute is billed while a VM is running. A VM must be **deallocated** to s
 - Never commit passwords, tokens, or private keys.
 - Do not expose RDP (TCP 3389) to the entire internet.
 - Keep this repository private before adding any sensitive configuration; secrets still belong in GitHub/Azure secret stores, not files.
+
+
+## Repository setup
+
+See [docs/SETUP.md](docs/SETUP.md) for the GitHub Actions and Azure OIDC configuration steps. The start and deallocate workflows are manual-only; they do not run automatically.
+
+**Before adding Azure configuration:** switch this repository to private. Never commit credentials or resource-specific secrets.
