@@ -1,0 +1,23 @@
+{
+  "name": "CloudWindows Linux Desktop",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "hostRequirements": {
+    "cpus": 2
+  },
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Linux desktop (noVNC)",
+      "onAutoForward": "openBrowser",
+      "visibility": "private"
+    }
+  },
+  "postStartCommand": "bash .devcontainer/start-desktop.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  }
+}
