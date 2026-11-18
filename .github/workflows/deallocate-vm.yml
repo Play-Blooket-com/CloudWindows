@@ -1,0 +1,44 @@
+name: Deallocate CloudWindows VM
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deallocate:
+    name: Deallocate the Azure VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate configuration
+        shell: bash
+        env:
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          VM_NAME: ${{ vars.AZURE_VM_NAME }}
+        run: |
+          set -euo pipefail
+          [[ -n "$RESOURCE_GROUP" ]] || { echo "::error::Set the AZURE_RESOURCE_GROUP repository variable."; exit 1; }
+          [[ -n "$VM_NAME" ]] || { echo "::error::Set the AZURE_VM_NAME repository variable."; exit 1; }
+
+      - name: Sign in to Azure using OIDC
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deallocate VM
+        uses: azure/cli@v2
+        env:
+          RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+          VM_NAME: ${{ vars.AZURE_VM_NAME }}
+          AZURE_CORE_OUTPUT: none
+        with:
+          azcliversion: latest
+          inlineScript: |
+            set -euo pipefail
+            az vm show --resource-group "$RESOURCE_GROUP" --name "$VM_NAME" --output none
+            az vm deallocate --resource-group "$RESOURCE_GROUP" --name "$VM_NAME" --output none
+            echo "Deallocation request submitted for VM '$VM_NAME' in resource group '$RESOURCE_GROUP'."
